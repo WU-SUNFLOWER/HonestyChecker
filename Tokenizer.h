@@ -21,11 +21,11 @@ private:
 	enum StartState { Initial = 0, Comment = 1};
 
 private:
-	char* _text;
-	int _text_length;
 
 	int _currentTextPos;
 	int _beginTextPos;
+	int _lastAcceptedState;
+	int _lastAcceptedCurrentPos;
 
 	std::vector<Token>& _target;
 
@@ -41,13 +41,16 @@ private:
 	int _currentState;
 	bool _is_at_begin_of_line;
 
+	const char* _text;
+	size_t _text_length;
 	char* _matched_text = nullptr;
-	char _backup_char;
-	int _matched_text_length;
+	size_t _matched_text_length;
+	size_t _matched_text_buffer_size;
 
 public:
-	Tokenizer(char* text, int text_length, std::vector<Token>& target, int type);
-	
+	Tokenizer(const char* text, size_t text_length, std::vector<Token>& target, int type);
+	~Tokenizer();
+
 	void run();
 	
 	void setupMatchedText();
@@ -60,13 +63,9 @@ public:
 	void recordCharacter(char ch);
 	void recordEOL();
 
-	char* getMatchedText() {
-		return _matched_text;
-	}
-	int getMatchedTextLength() {
-		return _matched_text_length;
-	}
+	void backToPreviousState();
 
 	static Token getTokenFromIdfList(const char* idf, const struct Idf idf_list[], size_t, Token);
+
 };
 #endif

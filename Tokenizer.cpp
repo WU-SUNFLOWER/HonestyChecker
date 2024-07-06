@@ -238,7 +238,7 @@ const struct Idf Tokenizer::Idf_Cpp_Keywords[] = {
     {"private",		NORM('p')},
     {"protected",		NORM('P')},
     {"public",		CTRL('P')},
-    {"register",		No_Token},
+    {"register",		Token::None},
     {"reinterpret_cast",	NORM('r')},
     {"return",		NORM('R')},
     {"short",		NORM('s')},
@@ -266,7 +266,7 @@ const struct Idf Tokenizer::Idf_Cpp_Keywords[] = {
     {"xor_eq",		NORM('X')}
 };
 
-Tokenizer::Tokenizer(char* text, int text_length, std::vector<Token>& target, int type)
+Tokenizer::Tokenizer(const char* text, size_t text_length, std::vector<Token>& target, int type)
     : _text(text), _target(target), _text_length(text_length), _is_at_begin_of_line(true)
 {
     _matrix_accept = Tokenizer::Matrix_Cpp_Accept;
@@ -277,14 +277,32 @@ Tokenizer::Tokenizer(char* text, int text_length, std::vector<Token>& target, in
     _matrix_meta = Tokenizer::Matrix_Cpp_Meta;
     _matrix_nxt = Tokenizer::Matrix_Cpp_Nxt;
 
+    _matched_text_buffer_size = 32;
+    _matched_text = new char[_matched_text_buffer_size]();
+
     setStartState(Tokenizer::StartState::Initial);
 }
 
+Tokenizer::~Tokenizer() {
+    delete[] _matched_text;
+}
+
 void Tokenizer::setupMatchedText() {
-    _matched_text = &_text[_beginTextPos];
-    _backup_char = _text[_currentTextPos];
-    _text[_currentTextPos] = '\0';
-    _matched_text_length = _currentTextPos - _beginTextPos;
+
+    int matchedRangeSize = _currentTextPos - _beginTextPos;
+    if (_matched_text_buffer_size <= matchedRangeSize) {
+        while (_matched_text_buffer_size <= matchedRangeSize) {
+            _matched_text_buffer_size <<= 1;
+        }
+        delete[] _matched_text;
+        _matched_text = new char[_matched_text_buffer_size]();
+    }
+
+    strncpy(_matched_text, &_text[_beginTextPos], matchedRangeSize);
+    _matched_text[matchedRangeSize] = '\0';
+    _matched_text_length = strlen(_matched_text);
+
+    //_backup_char = _text[_currentTextPos];
 
     if (_matched_text_length > 0) {
         setBOL(_matched_text[_matched_text_length - 1] == '\n');
@@ -300,11 +318,37 @@ void Tokenizer::recordToken(Token token) {
 }
 
 void Tokenizer::recordCharacter(char ch) {
-    _target.push_back(Int_To_Token(static_cast<int>(ch)));
+    _target.push_back(Token(ch));
 }
 
 void Tokenizer::recordEOL() {
-    _target.push_back(End_Of_Line);
+    //_target.push_back(Token::EndOfLine);
+}
+
+#define CharToSubscript(ch) (static_cast<size_t>(static_cast<unsigned char>((ch))))
+
+void Tokenizer::backToPreviousState() {
+    _currentTextPos = _beginTextPos;
+
+    _currentState = _startState;
+    if (_is_at_begin_of_line) ++_currentState;
+
+    while (_text[_currentTextPos] != '\0') {
+        int offset = _matrix_ec[CharToSubscript(_text[_currentTextPos])];
+        if (_matrix_accept[_currentState]) {
+            _lastAcceptedState = _currentState;
+            _lastAcceptedCurrentPos = _currentTextPos;
+        }
+        while (_matrix_chk[_matrix_base[_currentState] + offset] != _currentState) {
+            _currentState = _matrix_def[_currentState];
+            if (_currentState >= 94) {
+                offset = _matrix_meta[offset];
+            }
+        }
+        _currentState = _matrix_nxt[_matrix_base[_currentState] + offset];
+        ++_currentTextPos;
+    }
+
 }
 
 Token Tokenizer::getTokenFromIdfList(const char* idf, const Idf idf_list[], size_t list_size, Token default_token) {
@@ -331,15 +375,15 @@ void Tokenizer::run() {
     _currentTextPos = 0;
     _beginTextPos = 0;
 
-    int lastAcceptedState = 0;
-    int lastAcceptedCurrentPos = 0;
+    _lastAcceptedState = 0;
+    _lastAcceptedCurrentPos = 0;
 
     bool isFirstIteration = true;
 
     while (_currentTextPos < _text_length) {
 
         if (!isFirstIteration) {
-            _text[_currentTextPos] = _backup_char;
+            //_text[_currentTextPos] = _backup_char;
             _beginTextPos = _currentTextPos;
         }
         isFirstIteration = false;
@@ -348,10 +392,10 @@ void Tokenizer::run() {
         if (_is_at_begin_of_line) ++_currentState;
 
         do {
-            int offset = _matrix_ec[static_cast<size_t>(_text[_currentTextPos])];
+            int offset = _matrix_ec[CharToSubscript(_text[_currentTextPos])];
             if (_matrix_accept[_currentState]) {
-                lastAcceptedState = _currentState;
-                lastAcceptedCurrentPos = _currentTextPos;
+                _lastAcceptedState = _currentState;
+                _lastAcceptedCurrentPos = _currentTextPos;
             }
             while (_matrix_chk[_matrix_base[_currentState] + offset] != _currentState) {
                 _currentState = _matrix_def[_currentState];
@@ -361,14 +405,13 @@ void Tokenizer::run() {
             }
             _currentState = _matrix_nxt[_matrix_base[_currentState] + offset];
             ++_currentTextPos;
-
-
         } while (_matrix_base[_currentState] != 363);
 
+Label_Find_Action:
         int action = _matrix_accept[_currentState];
         if (action == 0) {
-            _currentTextPos = lastAcceptedCurrentPos;
-            _currentState = lastAcceptedState;
+            _currentTextPos = _lastAcceptedCurrentPos;
+            _currentState = _lastAcceptedState;
             action = _matrix_accept[_currentState];
         }
         assert(action != 0);
@@ -405,7 +448,7 @@ void Tokenizer::run() {
             }
             /* strings */
             case 7: {
-                recordToken(STR);
+                recordToken(Token::STR);
                 break;
             }
             /* characters */
@@ -431,13 +474,13 @@ void Tokenizer::run() {
             }
             /* numeral, passed as an identifier */
             case 11: {
-                recordToken(IDF);
+                recordToken(Token::IDF);
                 break;
             }
             /* identifier in front of ( */
             case 12: {
                 // undo effects of setting up yytext
-                _text[_currentTextPos] = _backup_char;
+                //_text[_currentTextPos] = _backup_char;
                 --_currentTextPos;
                 // set up yytext again
                 setupMatchedText();
@@ -445,8 +488,8 @@ void Tokenizer::run() {
                 Token token = getTokenFromIdfList(_matched_text, 
                                                   Tokenizer::Idf_Cpp_Keywords, 
                                                   sizeof(Tokenizer::Idf_Cpp_Keywords),
-                                                  IDF);
-                if (!Token_EQ(token, No_Token)) recordToken(token);
+                                                  Token::IDF);
+                if (token != Token::None) recordToken(token);
                 break;
             }
             /* identifier */
@@ -454,8 +497,8 @@ void Tokenizer::run() {
                 Token token = getTokenFromIdfList(_matched_text,
                     Tokenizer::Idf_Cpp_Keywords,
                     sizeof(Tokenizer::Idf_Cpp_Keywords),
-                    IDF);
-                if (!Token_EQ(token, No_Token)) recordToken(token);
+                    Token::IDF);
+                if (token != Token::None) recordToken(token);
                 break;
             }
             /* semicolon, conditionally ignored */
@@ -481,7 +524,13 @@ void Tokenizer::run() {
                 break;
             }
             case 20: {
-                return;
+                if (_matched_text_length <= 0) {
+                    return;
+                }
+                else {
+                    backToPreviousState();
+                    goto Label_Find_Action;
+                }
             }
         }
     }
