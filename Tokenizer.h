@@ -47,11 +47,13 @@ private:
 	size_t _matched_text_length;
 	size_t _matched_text_buffer_size;
 
+	int _token_count;
+
 public:
 	Tokenizer(const char* text, size_t text_length, std::vector<Token>& target, int type);
 	~Tokenizer();
 
-	void run();
+	size_t run();
 	
 	void setupMatchedText();
 	void setStartState(Tokenizer::StartState);

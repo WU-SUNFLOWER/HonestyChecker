@@ -21,13 +21,19 @@
     <ClCompile Include="Tokenizer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Idf.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Token.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="util.cpp">
+    <ClCompile Include="ForwardRefMaker.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Comparer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="HonestyChecker.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -42,6 +48,18 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="util.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="HonestyChecker.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ForwardRefMaker.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Comparer.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

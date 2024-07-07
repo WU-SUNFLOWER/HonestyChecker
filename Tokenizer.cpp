@@ -281,6 +281,8 @@ Tokenizer::Tokenizer(const char* text, size_t text_length, std::vector<Token>& t
     _matched_text = new char[_matched_text_buffer_size]();
 
     setStartState(Tokenizer::StartState::Initial);
+
+    _token_count = 0;
 }
 
 Tokenizer::~Tokenizer() {
@@ -315,10 +317,12 @@ void Tokenizer::setStartState(Tokenizer::StartState state) {
 
 void Tokenizer::recordToken(Token token) {
     _target.push_back(token);
+    ++_token_count;
 }
 
 void Tokenizer::recordCharacter(char ch) {
     _target.push_back(Token(ch));
+    ++_token_count;
 }
 
 void Tokenizer::recordEOL() {
@@ -371,7 +375,7 @@ Token Tokenizer::getTokenFromIdfList(const char* idf, const Idf idf_list[], size
     return default_token;
 }
 
-void Tokenizer::run() {
+size_t Tokenizer::run() {
     _currentTextPos = 0;
     _beginTextPos = 0;
 
@@ -525,7 +529,7 @@ Label_Find_Action:
             }
             case 20: {
                 if (_matched_text_length <= 0) {
-                    return;
+                    return _token_count;
                 }
                 else {
                     backToPreviousState();
@@ -533,6 +537,9 @@ Label_Find_Action:
                 }
             }
         }
+
     }
+    
+    return _token_count;
 
 }

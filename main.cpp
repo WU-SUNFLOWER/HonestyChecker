@@ -1,27 +1,53 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <sstream>
-#include "tokenizer.h"
+#include "Tokenizer.h"
+#include "Text.h"
+#include "Comparer.h"
 
-int main() {
-    
+void readText(std::string filename, std::vector<Token>& vec, std::vector<Text>& texts) {
     std::stringstream stream;
-    std::ifstream file("test_case/b.txt");
+    std::ifstream file(filename);
     stream << file.rdbuf();
     file.close();
     std::string str = stream.str();
     const char* code = str.c_str();
 
-    std::cout << str << std::endl;
+    Tokenizer tokenizer(code, strlen(code), vec, 0);
+    size_t begin = vec.size();
+    size_t length = tokenizer.run();
+    Text text(vec, begin, begin + length);
 
-    std::vector<Token> target;
-    Tokenizer tokenizer(code, strlen(code), target, 0);
-    tokenizer.run();
+    texts.push_back(text);
 
-    std::cout << target.size() << std::endl;
+}
 
-    for (auto& token : target) {
-        token.print();
-    }
+int main() {
+    
+    std::vector<Token> vec = {Token::None};
+    std::vector<Text> texts;
+
+    readText("test_case/a.txt", vec, texts);
+    readText("test_case/b.txt", vec, texts);
+    readText("test_case/c.txt", vec, texts);
+
+    Comparer comparer(vec, texts);
+    printf("%lf", comparer.run());
+
+    /*
+    FILE* outfile = fopen("test_case/token.txt", "w");
+
+    int cnt = 0;
+    for (auto& tk : vec) {
+        fprintf(outfile, "%d ", cnt);
+        tk.print(outfile);
+        fprintf(outfile, "\n");
+        ++cnt;
+    }    
+    */
+
+
+
+
 
 }

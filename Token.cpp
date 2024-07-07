@@ -23,39 +23,39 @@ int Token::toInt() const {
 	return static_cast<int>(_value);
 }
 
-void Token::print() const {
+void Token::print(FILE* file = stdout) const {
 	int value = toInt();
 	int bit8 = value & 0x80; // 0b 1000 0000
 	char ch = value & 0x7F; // 0b 0111 1111
 
 	if (*this == Token::None) {
-		printf("--");
+		fprintf(file, "--");
 		return;
 	}
 	if (*this == Token::IDF) {
-		printf("IDF");
+		fprintf(file, "IDF");
 		return;
 	}
 	if (*this == Token::STR) {
-		printf("STR");
+		fprintf(file, "STR");
 		return;
 	}
 	if (*this == Token::EndOfLine) {
-		printf("EOL");
+		fprintf(file, "EOL");
 		return;
 	}
 
 	if (isSimpleToken()) {
 		if (Util::inRange(ch, '!', '~')) {
-			printf("%s%c", (bit8 ? "8" : ""), ch);
+			fprintf(file, "%s%c", (bit8 ? "8" : ""), ch);
 			return;
 		}
 		if (Util::inRange(ch, (char)1, ' ')) {
-			printf("%s%c", (bit8 ? "$" : "^"), ch + '@');
+			fprintf(file, "%s%c", (bit8 ? "$" : "^"), ch + '@');
 			return;
 		}
 		if (ch == 0x7F) {
-			printf("%s%c", (bit8 ? "$" : "^"), '?');
+			fprintf(file, "%s%c", (bit8 ? "$" : "^"), '?');
 			return;
 		}
 	}
@@ -64,7 +64,7 @@ void Token::print() const {
 	{                                                \
 		char _ch = static_cast<char>(ch + offset);   \
 		assert(Util::inRange(_ch, low, high));          \
-		printf("%s(%c)", type, _ch);                 \
+		fprintf(file, "%s(%c)", type, _ch);                 \
 	}
 
 	if (isCTRL()) {

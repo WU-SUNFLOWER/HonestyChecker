@@ -1,6 +1,7 @@
 #ifndef Head_Token
 #define Head_Token
 
+#include <cstdio>
 #include <cstdint>
 
 class Token {
@@ -13,7 +14,7 @@ public:
 
 	int toInt() const;
 
-	void print() const;
+	void print(FILE* file) const;
 
 	bool isSimpleToken() const;
 	bool isCTRL() const;
