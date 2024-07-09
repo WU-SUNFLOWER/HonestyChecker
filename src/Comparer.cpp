@@ -4,18 +4,13 @@
 #include "util.h"
 #include <cassert>
 
-Comparer::Comparer(std::vector<Token>& vec, std::vector<Text>& texts) :
-	_token_vector(vec), _texts(texts)
-{
-    ForwardRefMaker preprocessor(texts, vec);
-    _forward_reference = preprocessor.run();
+using namespace HonestyChecker;
 
-    /*
-    for (size_t i = 0; i < vec.size(); ++i) {
-        printf("%lld ", forwardRef[i]);
-        if (i != 0 && i % 25 == 0) putchar('\n');
-    }    
-    */
+Comparer::Comparer(std::vector<Token>& vec, std::vector<Text>& texts, Lang* lang) :
+    _token_vector(vec), _texts(texts), _lang(lang)
+{
+    ForwardRefMaker preprocessor(texts, vec, lang);
+    _forward_reference = preprocessor.run();
 }
 
 Comparer::~Comparer() {
@@ -45,8 +40,8 @@ size_t Comparer::lcs(Text& subject, size_t i0) {
 
     size_t bestSize = 0;
     size_t begin = subject.end();
-    size_t end = _texts.back().end();
-    while (i1 && Util::inRange(i1, begin, end)) {
+    size_t end = _texts.back().end() - 1;
+    for (; i1 && Util::inRange(i1, begin, end); i1 = _forward_reference[i1]) {
         // determine which interval i1 falls in
         size_t lowTextIdx = 0;
         size_t highTextIdx = _texts.size() - 1;
@@ -69,7 +64,7 @@ size_t Comparer::lcs(Text& subject, size_t i0) {
 
         size_t j0, j1;
 
-        size_t betterSize = bestSize == 0 ? HonestyChecker::MinRunSize : (betterSize + 1);
+        size_t betterSize = bestSize == 0 ? HonestyChecker::MinRunSize : (bestSize + 1);
         j0 = i0 + betterSize - 1;
         j1 = i1 + betterSize - 1;
         // check whether we can get a result which length not less than betterSize
@@ -94,12 +89,16 @@ size_t Comparer::lcs(Text& subject, size_t i0) {
             ++j0, ++j1, ++newSize;
         }
 
+        /* Offer the run to the Language module which may
+           reject it or may cut its tail.
+        */
+        while (newSize > 1 && _lang->isNotFinal(_token_vector[i0 + newSize - 1])) {
+            --newSize;
+        }
+
         if (newSize > bestSize) bestSize = newSize;
-
-        i1 = _forward_reference[i1];
-
-
     }
+
 
     return bestSize;
 }

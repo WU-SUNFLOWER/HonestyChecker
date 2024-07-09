@@ -1,4 +1,8 @@
-//a.cpp
+/*
+Hello
+Hello
+Hello
+*/
 #include<stdio.h>
 typedef struct //定义一个新的数据类型
 {

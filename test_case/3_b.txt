@@ -1,0 +1,9 @@
+def sort_bubble(lst):
+    length = len(lst)
+    for idx in range(length):
+        for jdx in range(0, length-idx-1):
+            if lst[jdx] > lst[jdx+1]:
+                lst[jdx], lst[jdx+1] = lst[jdx+1], lst[jdx]
+    return lst
+
+print(sort_bubble([64, 34, 25, 12, 22, 11, 90]))

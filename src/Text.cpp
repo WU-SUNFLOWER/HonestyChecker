@@ -1,6 +1,8 @@
 #include "Text.h"
 #include <cassert>
 
+using namespace HonestyChecker;
+
 Text::Text(std::vector<Token>& boundVector, size_t begin, size_t end) 
 	: _bound_vector(boundVector), _begin(begin), _end(end)
 {

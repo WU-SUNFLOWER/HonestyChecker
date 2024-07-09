@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <cassert>
 
+using namespace HonestyChecker;
+
 Token Token::None = Token(0);
 Token Token::IDF = Token(0x17F);
 Token Token::STR = Token(0x180);
@@ -110,10 +112,14 @@ bool Token::isMETA() const {
 	return Util::inRange(toInt(), 0x01A1, 0x01FE);
 }
 
-bool operator ==(const Token& a, const Token& b) {
+bool Token::operator<(const Token& other) const {
+	return _value < other._value;
+}
+
+bool operator ==(const HonestyChecker::Token& a, const HonestyChecker::Token& b) {
 	return a.toInt() == b.toInt();
 }
 
-bool operator !=(const Token& a, const Token& b) {
+bool operator !=(const HonestyChecker::Token& a, const HonestyChecker::Token& b) {
 	return a.toInt() != b.toInt();
 }

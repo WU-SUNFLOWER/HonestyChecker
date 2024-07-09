@@ -1,4 +1,4 @@
-//b.cpp
+﻿//b.cpp
 #include<stdio.h>
 typedef struct //使用结构体
 {

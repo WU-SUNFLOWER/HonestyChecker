@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="源文件\languages">
+      <UniqueIdentifier>{bc373031-eb5a-4706-a981-246065744eda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\languages">
+      <UniqueIdentifier>{286c32a0-7075-452d-82e7-2c0d61784f7e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -35,6 +41,15 @@
     </ClCompile>
     <ClCompile Include="HonestyChecker.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="languages\Lang.cpp">
+      <Filter>源文件\languages</Filter>
+    </ClCompile>
+    <ClCompile Include="languages\LangCpp.cpp">
+      <Filter>源文件\languages</Filter>
+    </ClCompile>
+    <ClCompile Include="languages\LangPython.cpp">
+      <Filter>源文件\languages</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +76,15 @@
     </ClInclude>
     <ClInclude Include="Comparer.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="languages\Lang.h">
+      <Filter>头文件\languages</Filter>
+    </ClInclude>
+    <ClInclude Include="languages\LangCpp.h">
+      <Filter>头文件\languages</Filter>
+    </ClInclude>
+    <ClInclude Include="languages\LangPython.h">
+      <Filter>头文件\languages</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

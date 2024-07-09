@@ -1,0 +1,13 @@
+# Ã°ÅİÅÅĞòËã·¨
+def bubble_sort(array):
+    n = len(array)
+    # Íâ²ãÑ­»·
+    for i in range(n):
+        # ÄÚ²ãÑ­»·
+        for j in range(0, n-i-1):
+            # ½»»»ÔªËØ
+            if array[j] > array[j+1]:
+                array[j], array[j+1] = array[j+1], array[j]
+    return array
+
+print(bubble_sort([64, 34, 25, 12, 22, 11, 90]))

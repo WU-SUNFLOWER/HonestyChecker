@@ -1,26 +1,17 @@
 #ifndef Head_Tokenizer
 #define Head_Tokenizer
 
+#include "HonestyChecker.h"
 #include "token.h"
 #include "Idf.h"
 #include <vector>
 
+namespace HonestyChecker {
+
 class Tokenizer {
 private:
-	static const int Matrix_Cpp_Accept[];
-	static const int Matrix_Cpp_Ec[];
-	static const int Matrix_Cpp_Meta[];
-	static const int Matrix_Cpp_Base[];
-	static const int Matrix_Cpp_Def[];
-	static const int Matrix_Cpp_Nxt[];
-	static const int Matrix_Cpp_Chk[];
 
-	static const struct Idf Idf_Cpp_PreprocessCommands[];
-	static const struct Idf Idf_Cpp_Keywords[];
-
-	enum StartState { Initial = 0, Comment = 1};
-
-private:
+	Lang* _lang;
 
 	int _currentTextPos;
 	int _beginTextPos;
@@ -37,6 +28,9 @@ private:
 	const int* _matrix_nxt;
 	const int* _matrix_chk;
 
+	const struct Idf* _preprocess_commands;
+	const struct Idf* _keywords;
+
 	int _startState;
 	int _currentState;
 	bool _is_at_begin_of_line;
@@ -50,13 +44,20 @@ private:
 	int _token_count;
 
 public:
-	Tokenizer(const char* text, size_t text_length, std::vector<Token>& target, int type);
+
+	template<typename T>
+	friend class LangBase;
+
+	//enum StartState { Initial = 0, Comment = 1 };
+	enum DispatchingActionResult { Default = 0, Halt = 1, FindActionAgain = 2};
+
+	Tokenizer(const char* text, size_t text_length, std::vector<Token>& target, Lang* lang);
 	~Tokenizer();
 
 	size_t run();
 	
 	void setupMatchedText();
-	void setStartState(Tokenizer::StartState);
+	void setStartState(int);
 	void setBOL(bool bol) {
 		_is_at_begin_of_line = bol;
 	};
@@ -67,7 +68,13 @@ public:
 
 	void backToPreviousState();
 
+	void printVector(size_t begin, size_t end, FILE* file = stdout) const;
+
 	static Token getTokenFromIdfList(const char* idf, const struct Idf idf_list[], size_t, Token);
 
 };
+
+}
+
+
 #endif

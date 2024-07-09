@@ -1,8 +1,11 @@
 #ifndef Head_ForwardRefMaker
 #define Head_ForwardRefMaker
 
+#include "HonestyChecker.h"
 #include "Text.h"
 #include <vector>
+
+namespace HonestyChecker {
 
 class ForwardRefMaker {
 private:
@@ -14,11 +17,13 @@ private:
 	std::vector<Token>& _vector;
 	size_t _vector_length;
 
+	Lang* _lang;
+
 	size_t* _forward_reference = nullptr;
 	size_t* _latest_index = nullptr; // our hash table
 	size_t _hash_table_size = 0;
 public:
-	ForwardRefMaker(std::vector<Text>&, std::vector<Token>&);
+	ForwardRefMaker(std::vector<Text>&, std::vector<Token>&, Lang* lang);
 	~ForwardRefMaker();
 
 	bool isEqualMinRun(size_t i, size_t j);
@@ -27,5 +32,8 @@ public:
 
 	const size_t* result() const;
 };
+
+}
+
 
 #endif

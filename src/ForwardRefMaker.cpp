@@ -1,6 +1,9 @@
 #include "ForwardRefMaker.h"
 #include "HonestyChecker.h"
+#include "Lang.h"
 #include <cassert>
+
+using namespace HonestyChecker;
 
 int ForwardRefMaker::shift = 5;
 
@@ -35,8 +38,8 @@ size_t ForwardRefMaker::prime[] = {
 	UINT64_C(1099511627776),
 };
 
-ForwardRefMaker::ForwardRefMaker(std::vector<Text>& texts, std::vector<Token>& tokenVec)
-	: _texts(texts), _vector(tokenVec), _vector_length(_vector.size())
+ForwardRefMaker::ForwardRefMaker(std::vector<Text>& texts, std::vector<Token>& tokenVec, Lang* lang)
+	: _texts(texts), _vector(tokenVec), _vector_length(_vector.size()), _lang(lang)
 {
 
 	assert(&(texts[0].tokenVector()) == &(tokenVec));
@@ -64,8 +67,8 @@ ForwardRefMaker::~ForwardRefMaker() {
 }
 
 bool ForwardRefMaker::isEqualMinRun(size_t i, size_t j) {
-	assert((i + HonestyChecker::MinRunSize < _vector.size()) 
-		&& (j + HonestyChecker::MinRunSize < _vector.size()));
+	assert((i + HonestyChecker::MinRunSize - 1 < _vector.size()) 
+		&& (j + HonestyChecker::MinRunSize - 1 < _vector.size()));
 
 	size_t offset = 0;
 	while (offset < HonestyChecker::MinRunSize) {
@@ -97,6 +100,10 @@ size_t* ForwardRefMaker::run() {
 			}
 
 			size_t runStartPos = pos - HonestyChecker::MinRunSize + 1;
+			// Can the run be useful?
+			if (_lang->isNotInitial(_vector[runStartPos])) {
+				continue;
+			}
 
 			size_t hashTableSlotPos = hashValue % _hash_table_size;
 			if (_latest_index[hashTableSlotPos]) {

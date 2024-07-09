@@ -1,8 +1,11 @@
 #ifndef Head_Text
 #define Head_Text
 
+#include "HonestyChecker.h"
 #include <vector>
 #include "Token.h"
+
+namespace HonestyChecker {
 
 class Text {
 private:
@@ -15,5 +18,9 @@ public:
 	size_t end() const;
 	std::vector<Token>& tokenVector();
 };
+
+}
+
+
 
 #endif

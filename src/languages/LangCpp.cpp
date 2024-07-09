@@ -1,8 +1,11 @@
-#include "Tokenizer.h"
-#include <cassert>
-#include <iostream>
+#include "LangCpp.h"
 
-const int Tokenizer::Matrix_Cpp_Accept[] = {
+using namespace HonestyChecker;
+
+const int LangBase<LangCpp>::Magic_Number_1 = 94;
+const int LangBase<LangCpp>::Magic_Number_2 = 363;
+
+const int LangBase<LangCpp>::Matrix_Accept[] = {
     0,
     0,    0,    0,    0,   20,   18,   16,   15,   16,   17,
     17,   17,   17,   11,   11,   14,   11,   13,   17,    2,
@@ -16,7 +19,7 @@ const int Tokenizer::Matrix_Cpp_Accept[] = {
     2,    2,    0
 };
 
-const int Tokenizer::Matrix_Cpp_Ec[] = {
+const int LangBase<LangCpp>::Matrix_Ec[] = {
     0,
         1,    1,    1,    1,    1,    1,    1,    1,    2,    3,
         1,    2,    2,    1,    1,    1,    1,    1,    1,    1,
@@ -48,14 +51,14 @@ const int Tokenizer::Matrix_Cpp_Ec[] = {
         1,    1,    1,    1,    1
 };
 
-const int Tokenizer::Matrix_Cpp_Meta[] = {
+const int LangBase<LangCpp>::Matrix_Meta[] = {
         0,
         1,    2,    3,    2,    1,    1,    1,    4,    5,    6,
         1,    7,    7,    1,    8,    9,    8,    1,    8,    8,
         8,    9,    8,    9,    9,    8
 };
 
-const int Tokenizer::Matrix_Cpp_Base[] = {
+const int LangBase<LangCpp>::Matrix_Base[] = {
        0,
         0,  310,   26,  301,  302,  363,  363,  363,  363,  363,
        47,  281,   44,   40,   41,  363,   59,  285,   84,    0,
@@ -71,7 +74,7 @@ const int Tokenizer::Matrix_Cpp_Base[] = {
       314,  323,  326,  335,  344,  353
 };
 
-const int Tokenizer::Matrix_Cpp_Def[] = {
+const int LangBase<LangCpp>::Matrix_Def[] = {
        0,
        93,    1,   93,    3,   93,   93,   93,   93,   93,   93,
        94,   95,   93,   96,   96,   93,   93,   97,   98,   99,
@@ -87,7 +90,7 @@ const int Tokenizer::Matrix_Cpp_Def[] = {
        93,   93,   93,   93,   93,   93
 };
 
-const int Tokenizer::Matrix_Cpp_Nxt[] = {
+const int LangBase<LangCpp>::Matrix_Nxt[] = {
        0,
         6,    7,    8,    9,   10,   11,   10,   12,   10,   10,
        13,   14,   15,   16,   17,   18,   18,   10,   17,   17,
@@ -133,7 +136,7 @@ const int Tokenizer::Matrix_Cpp_Nxt[] = {
        93,   93,   93,   93,   93,   93,   93,   93,   93
 };
 
-const int Tokenizer::Matrix_Cpp_Chk[] = {
+const int LangBase<LangCpp>::Matrix_Chk[] = {
        0,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -179,7 +182,7 @@ const int Tokenizer::Matrix_Cpp_Chk[] = {
        93,   93,   93,   93,   93,   93,   93,   93,   93
 };
 
-const struct Idf Tokenizer::Idf_Cpp_PreprocessCommands[] = {
+const struct HonestyChecker::Idf LangBase<LangCpp>::Idf_PreprocessCommands[] = {
     {"define",		META('d')},
     {"elif",		META('e')},
     {"else",		META('E')},
@@ -194,7 +197,7 @@ const struct Idf Tokenizer::Idf_Cpp_PreprocessCommands[] = {
     {"undef",		META('u')}
 };
 
-const struct Idf Tokenizer::Idf_Cpp_Keywords[] = {
+const struct HonestyChecker::Idf LangBase<LangCpp>::Idf_Keywords[] = {
     {"and",			NORM('a')},
     {"and_eq",		NORM('A')},
     {"asm",			CTRL('A')},
@@ -238,7 +241,7 @@ const struct Idf Tokenizer::Idf_Cpp_Keywords[] = {
     {"private",		NORM('p')},
     {"protected",		NORM('P')},
     {"public",		CTRL('P')},
-    {"register",		Token::None},
+    {"register",		HonestyChecker::Token::None},
     {"reinterpret_cast",	NORM('r')},
     {"return",		NORM('R')},
     {"short",		NORM('s')},
@@ -266,280 +269,227 @@ const struct Idf Tokenizer::Idf_Cpp_Keywords[] = {
     {"xor_eq",		NORM('X')}
 };
 
-Tokenizer::Tokenizer(const char* text, size_t text_length, std::vector<Token>& target, int type)
-    : _text(text), _target(target), _text_length(text_length), _is_at_begin_of_line(true)
-{
-    _matrix_accept = Tokenizer::Matrix_Cpp_Accept;
-    _matrix_base = Tokenizer::Matrix_Cpp_Base;
-    _matrix_chk = Tokenizer::Matrix_Cpp_Chk;
-    _matrix_def = Tokenizer::Matrix_Cpp_Def;
-    _matrix_ec = Tokenizer::Matrix_Cpp_Ec;
-    _matrix_meta = Tokenizer::Matrix_Cpp_Meta;
-    _matrix_nxt = Tokenizer::Matrix_Cpp_Nxt;
+const std::set<Token> LangBase<LangCpp>::Non_Initials = {
+    NORM(')'),
+    NORM('}'),
+    NORM(';'),
+};
 
-    _matched_text_buffer_size = 32;
-    _matched_text = new char[_matched_text_buffer_size]();
+const std::set<Token> LangBase<LangCpp>::Non_Finals = {
+    Token::IDF,			/* identifier */
+    NORM('{'),
+    NORM('('),
+    NORM('a'),		/* and */
+    NORM('A'),		/* and_eq */
+    CTRL('A'),		/* asm */
+    META('a'),		/* auto */
+    NORM('b'),		/* bitand */
+    NORM('B'),		/* bitor */
+    CTRL('B'),		/* bool */
+    META('b'),		/* break */
+    NORM('c'),		/* case */
+    NORM('C'),		/* char */
+    CTRL('C'),		/* class */
+    META('c'),		/* const */
+    META('C'),		/* const_cast */
+    MTCT('C'),		/* continue */
+    NORM('d'),		/* default */
+    NORM('D'),		/* delete */
+    CTRL('D'),		/* do */
+    META('D'),		/* double */
+    MTCT('D'),		/* dynamic_cast */
+    NORM('e'),		/* else */
+    NORM('E'),		/* enum */
+    CTRL('E'),		/* explicit */
+    MTCT('E'),		/* extern */
+    NORM('F'),		/* float */
+    CTRL('F'),		/* for */
+    META('f'),		/* friend */
+    NORM('g'),		/* goto */
+    NORM('i'),		/* if */
+    NORM('I'),		/* inline */
+    CTRL('I'),		/* int */
+    NORM('l'),		/* long */
+    NORM('m'),		/* mutable */
+    NORM('n'),		/* namespace */
+    NORM('N'),		/* new */
+    CTRL('N'),		/* not */
+    META('N'),		/* not_eq */
+    NORM('o'),		/* operator */
+    NORM('O'),		/* or */
+    CTRL('O'),		/* or_eq */
+    NORM('p'),		/* private */
+    NORM('P'),		/* protected */
+    CTRL('P'),		/* public */
+    NORM('r'),		/* reinterpret_cast */
+    NORM('R'),		/* return */
+    NORM('s'),		/* short */
+    NORM('S'),		/* signed */
+    CTRL('S'),		/* sizeof */
+    META('s'),		/* static */
+    META('S'),		/* static_cast */
+    MTCT('S'),		/* struct */
+    META('w'),		/* switch */
+    NORM('t'),		/* template */
+    CTRL('T'),		/* throw */
+    META('T'),		/* try */
+    MTCT('T'),		/* typedef */
+    NORM('y'),		/* typeid */
+    NORM('z'),		/* typename */
+    NORM('u'),		/* union */
+    NORM('U'),		/* unsigned */
+    CTRL('U'),		/* using */
+    NORM('v'),		/* virtual */
+    NORM('V'),		/* volatile */
+    CTRL('V'),		/* void */
+    NORM('w'),		/* while */
+    NORM('x'),		/* xor */
+    NORM('X'),		/* xor_eq */
+};
 
-    setStartState(Tokenizer::StartState::Initial);
+const std::set<Token> LangBase<LangCpp>::Openers = {
+    NORM('{'),
+    NORM('('),
+    NORM('['),
+};
 
-    _token_count = 0;
+const std::set<Token> LangBase<LangCpp>::Closers = {
+    NORM('}'),
+    NORM(')'),
+    NORM(']'),
+};
+
+Lang* LangCpp::instance = nullptr;
+
+size_t LangCpp::getLengthOfPreprocessCommandsList() {
+    return sizeof(LangCpp::Idf_PreprocessCommands) / sizeof(HonestyChecker::Idf);
+}
+size_t LangCpp::getLengthOfKeywordsList() {
+    return sizeof(LangCpp::Idf_Keywords) / sizeof(HonestyChecker::Idf);
 }
 
-Tokenizer::~Tokenizer() {
-    delete[] _matched_text;
-}
+Tokenizer::DispatchingActionResult LangBase<LangCpp>::dispatchActionForTokenizer(
+    Tokenizer* tokenizer, int action
+) {
 
-void Tokenizer::setupMatchedText() {
+#define StartState_Initial 0
+#define StartState_Comment 1
 
-    int matchedRangeSize = _currentTextPos - _beginTextPos;
-    if (_matched_text_buffer_size <= matchedRangeSize) {
-        while (_matched_text_buffer_size <= matchedRangeSize) {
-            _matched_text_buffer_size <<= 1;
+    switch (action) {
+        /* start comment */
+        case 1: {
+            tokenizer->setStartState(StartState_Comment);
+            break;
         }
-        delete[] _matched_text;
-        _matched_text = new char[_matched_text_buffer_size]();
-    }
-
-    strncpy(_matched_text, &_text[_beginTextPos], matchedRangeSize);
-    _matched_text[matchedRangeSize] = '\0';
-    _matched_text_length = strlen(_matched_text);
-
-    //_backup_char = _text[_currentTextPos];
-
-    if (_matched_text_length > 0) {
-        setBOL(_matched_text[_matched_text_length - 1] == '\n');
-    }
-}
-
-void Tokenizer::setStartState(Tokenizer::StartState state) {
-    _startState = 1 + 2 * state;
-}
-
-void Tokenizer::recordToken(Token token) {
-    _target.push_back(token);
-    ++_token_count;
-}
-
-void Tokenizer::recordCharacter(char ch) {
-    _target.push_back(Token(ch));
-    ++_token_count;
-}
-
-void Tokenizer::recordEOL() {
-    //_target.push_back(Token::EndOfLine);
-}
-
-#define CharToSubscript(ch) (static_cast<size_t>(static_cast<unsigned char>((ch))))
-
-void Tokenizer::backToPreviousState() {
-    _currentTextPos = _beginTextPos;
-
-    _currentState = _startState;
-    if (_is_at_begin_of_line) ++_currentState;
-
-    while (_text[_currentTextPos] != '\0') {
-        int offset = _matrix_ec[CharToSubscript(_text[_currentTextPos])];
-        if (_matrix_accept[_currentState]) {
-            _lastAcceptedState = _currentState;
-            _lastAcceptedCurrentPos = _currentTextPos;
+        /* safe comment chunk */
+        case 2: {
+            break;
         }
-        while (_matrix_chk[_matrix_base[_currentState] + offset] != _currentState) {
-            _currentState = _matrix_def[_currentState];
-            if (_currentState >= 94) {
-                offset = _matrix_meta[offset];
-            }
+        /* unsafe char, read one by one */
+        case 3: {
+            break;
         }
-        _currentState = _matrix_nxt[_matrix_base[_currentState] + offset];
-        ++_currentTextPos;
-    }
-
-}
-
-Token Tokenizer::getTokenFromIdfList(const char* idf, const Idf idf_list[], size_t list_size, Token default_token) {
-    int first = 0;
-    int last = (int)(list_size / sizeof(struct Idf)) - 1;
-
-    while (first < last) {
-        int middle = (first + last) >> 1;
-        int result = strcmp(idf, idf_list[middle].id_tag);
-        if (result > 0) {
-            first = middle + 1;
+        /* match eol, to break up long comments */
+        case 4: {
+            tokenizer->recordEOL();
+            break;
         }
-        else if (result < 0) {
-            last = middle;
+        case 5: {
+            tokenizer->setStartState(StartState_Initial);
+            break;
         }
-        else {
-            return idf_list[middle].id_tr;
+        /* single-line comment */
+        case 6: {
+            tokenizer->recordEOL();
+            break;
         }
-    }
-    return default_token;
-}
-
-size_t Tokenizer::run() {
-    _currentTextPos = 0;
-    _beginTextPos = 0;
-
-    _lastAcceptedState = 0;
-    _lastAcceptedCurrentPos = 0;
-
-    bool isFirstIteration = true;
-
-    while (_currentTextPos < _text_length) {
-
-        if (!isFirstIteration) {
+        /* strings */
+        case 7: {
+            tokenizer->recordToken(Token::STR);
+            break;
+        }
+        /* characters */
+        case 8: {
+            tokenizer->recordCharacter('\'');
+            break;
+        }
+        /* ignore #include lines */
+        case 9: {
+            break;
+        }
+        /* a preprocessor line */
+        case 10: {
+            char* idf = tokenizer->_matched_text + 1;
+            /* skip layout in front of preprocessor identifier */
+            while (*idf == ' ' || *idf == '\t') idf++;
+            Token token = tokenizer->getTokenFromIdfList(idf,
+                this->getPreprocessCommands(),
+                this->getLengthOfPreprocessCommandsList(),
+                NORM('#'));
+            tokenizer->recordToken(token);
+            break;
+        }
+        /* numeral, passed as an identifier */
+        case 11: {
+            tokenizer->recordToken(Token::IDF);
+            break;
+        }
+        /* identifier in front of ( */
+        case 12: {
+            // undo effects of setting up yytext
             //_text[_currentTextPos] = _backup_char;
-            _beginTextPos = _currentTextPos;
+            --tokenizer->_currentTextPos;
+            // set up yytext again
+            tokenizer->setupMatchedText();
+
+            Token token = tokenizer->getTokenFromIdfList(tokenizer->_matched_text,
+                this->getKeywords(),
+                this->getLengthOfKeywordsList(),
+                Token::IDF);
+            if (token != Token::None) tokenizer->recordToken(token);
+            break;
         }
-        isFirstIteration = false;
-
-        _currentState = _startState;
-        if (_is_at_begin_of_line) ++_currentState;
-
-        do {
-            int offset = _matrix_ec[CharToSubscript(_text[_currentTextPos])];
-            if (_matrix_accept[_currentState]) {
-                _lastAcceptedState = _currentState;
-                _lastAcceptedCurrentPos = _currentTextPos;
-            }
-            while (_matrix_chk[_matrix_base[_currentState] + offset] != _currentState) {
-                _currentState = _matrix_def[_currentState];
-                if (_currentState >= 94) {
-                    offset = _matrix_meta[offset];
-                }
-            }
-            _currentState = _matrix_nxt[_matrix_base[_currentState] + offset];
-            ++_currentTextPos;
-        } while (_matrix_base[_currentState] != 363);
-
-Label_Find_Action:
-        int action = _matrix_accept[_currentState];
-        if (action == 0) {
-            _currentTextPos = _lastAcceptedCurrentPos;
-            _currentState = _lastAcceptedState;
-            action = _matrix_accept[_currentState];
+        /* identifier */
+        case 13: {
+            Token token = tokenizer->getTokenFromIdfList(tokenizer->_matched_text,
+                this->getKeywords(),
+                this->getLengthOfKeywordsList(),
+                Token::IDF);
+            if (token != Token::None) tokenizer->recordToken(token);
+            break;
         }
-        assert(action != 0);
-
-        setupMatchedText();
-
-        switch (action) {
-            /* start comment */
-            case 1: {
-                setStartState(Tokenizer::StartState::Comment);
-                break;
-            }
-            /* safe comment chunk */
-            case 2: {
-                break;
-            }
-            /* unsafe char, read one by one */
-            case 3: {
-                break;
-            }
-            /* match eol, to break up long comments */
-            case 4: {
-                recordEOL();
-                break;
-            }
-            case 5: {
-                setStartState(Tokenizer::StartState::Initial);
-                break;
-            }
-            /* single-line comment */
-            case 6: {
-                recordEOL();
-                break;
-            }
-            /* strings */
-            case 7: {
-                recordToken(Token::STR);
-                break;
-            }
-            /* characters */
-            case 8: {
-                recordCharacter('\'');
-                break;
-            }
-            /* ignore #include lines */
-            case 9: {
-                break;
-            }
-            /* a preprocessor line */
-            case 10: {
-                char* idf = _matched_text + 1;
-                /* skip layout in front of preprocessor identifier */
-                while (*idf == ' ' || *idf == '\t') idf++;
-                Token token = getTokenFromIdfList(idf, 
-                                                  Tokenizer::Idf_Cpp_PreprocessCommands,
-                                                  sizeof(Tokenizer::Idf_Cpp_PreprocessCommands),
-                                                  NORM('#'));
-                recordToken(token);
-                break;
-            }
-            /* numeral, passed as an identifier */
-            case 11: {
-                recordToken(Token::IDF);
-                break;
-            }
-            /* identifier in front of ( */
-            case 12: {
-                // undo effects of setting up yytext
-                //_text[_currentTextPos] = _backup_char;
-                --_currentTextPos;
-                // set up yytext again
-                setupMatchedText();
-                
-                Token token = getTokenFromIdfList(_matched_text, 
-                                                  Tokenizer::Idf_Cpp_Keywords, 
-                                                  sizeof(Tokenizer::Idf_Cpp_Keywords),
-                                                  Token::IDF);
-                if (token != Token::None) recordToken(token);
-                break;
-            }
-            /* identifier */
-            case 13: {
-                Token token = getTokenFromIdfList(_matched_text,
-                    Tokenizer::Idf_Cpp_Keywords,
-                    sizeof(Tokenizer::Idf_Cpp_Keywords),
-                    Token::IDF);
-                if (token != Token::None) recordToken(token);
-                break;
-            }
-            /* semicolon, conditionally ignored */
-            case 14: {
-                break;
-            }
-            /* count newlines */
-            case 15: {
-                recordEOL();
-                break;
-            }
-            /* ignore layout */
-            case 16: {
-                break;
-            }
-            /* copy other text */
-            case 17: {
-                recordCharacter(*_matched_text);
-                break;
-            }
-            /* count non-ASCII chars */
-            case 18: {
-                break;
-            }
-            case 20: {
-                if (_matched_text_length <= 0) {
-                    return _token_count;
-                }
-                else {
-                    backToPreviousState();
-                    goto Label_Find_Action;
-                }
-            }
+        /* semicolon, conditionally ignored */
+        case 14: {
+            break;
         }
-
+        /* count newlines */
+        case 15: {
+            tokenizer->recordEOL();
+            break;
+        }
+        /* ignore layout */
+        case 16: {
+            break;
+        }
+        /* copy other text */
+        case 17: {
+            tokenizer->recordCharacter(*(tokenizer->_matched_text));
+            break;
+        }
+        /* count non-ASCII chars */
+        case 18: {
+            break;
+        }
+        case 20: {
+            if (tokenizer->_matched_text_length <= 0) {
+                return Tokenizer::DispatchingActionResult::Halt;
+            }
+            else {
+                tokenizer->backToPreviousState();
+                return Tokenizer::DispatchingActionResult::FindActionAgain;
+            }
+            break;
+        }
     }
-    
-    return _token_count;
-
+    return Tokenizer::DispatchingActionResult::Default;
 }

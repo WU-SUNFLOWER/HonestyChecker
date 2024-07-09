@@ -105,6 +105,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>languages;.</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -129,8 +130,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Comparer.cpp" />
+    <ClCompile Include="languages\LangCpp.cpp" />
     <ClCompile Include="ForwardRefMaker.cpp" />
     <ClCompile Include="HonestyChecker.cpp" />
+    <ClCompile Include="languages\Lang.cpp" />
+    <ClCompile Include="languages\LangPython.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Token.cpp" />
@@ -138,9 +142,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Comparer.h" />
+    <ClInclude Include="languages\LangCpp.h" />
     <ClInclude Include="ForwardRefMaker.h" />
     <ClInclude Include="HonestyChecker.h" />
     <ClInclude Include="Idf.h" />
+    <ClInclude Include="languages\Lang.h" />
+    <ClInclude Include="languages\LangPython.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="Token.h" />
     <ClInclude Include="Tokenizer.h" />
