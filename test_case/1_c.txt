@@ -1,63 +1,39 @@
-int f(date d1, date d2)//º¯Êý¶¨Òå
+void f(Date x, Date y)
 {
-	int x, m, n;
-	switch (d1.month)//¼ÆËãµÚÒ»¸öÈÕÆÚÊÇÒ»ÄêµÄµÚ¼¸Ìì
+	int m, n;
+	int t;
+	//è®¡ç®—ä¸¤ä¸ªæ—¥æœŸçš„å¤©æ•°
+	switch (x.yue)
 	{
-	case 1:
-		m = d1.day;break;
-	case 2:
-		m = d1.day + 31;break;
-	case 3:
-		m = d1.day + 59;break;
-	case 4:
-		m = d1.day + 90;break;
-	case 5:
-		m = d1.day + 120;break;
-	case 6:
-		m = d1.day + 151;break;
-	case 7:
-		m = d1.day + 181;break;
-	case 8:
-		m = d1.day + 212;break;
-	case 9:
-		m = d1.day + 243;break;
-	case 10:
-		m = d1.day + 273;break;
-	case 11:
-		m = d1.day + 304;break;
-	case 12:
-		m = d1.day + 334;break;
+	case 1:m = x.tian; break;
+	case 2:m = x.tian + 31; break;
+	case 3:m = x.tian + 59; break;
+	case 4:m = x.tian + 90; break;
+	case 5:m = x.tian + 120; break;
+	case 6:m = x.tian + 151; break;
+	case 7:m = x.tian + 181; break;
+	case 8:m = x.tian + 212; break;
+	case 9:m = x.tian + 243; break;
+	case 10:m = x.tian + 273; break;
+	case 11:m = x.tian + 304; break;
+	case 12:m = x.tian + 334; break;
 	}
-	switch (d2.month)//¼ÆËãµÚ¶þ¸öÈÕÆÚÊÇÒ»ÄêµÄµÚ¼¸Ìì
+	switch (y.yue)
 	{
-	case 1:
-		n = d2.day;break;
-	case 2:
-		n = d2.day + 31;break;
-	case 3:
-		n = d2.day + 59;break;
-	case 4:
-		n = d2.day + 90;break;
-	case 5:
-		n = d2.day + 120;break;
-	case 6:
-		n = d2.day + 151;break;
-	case 7:
-		n = d2.day + 181;break;
-	case 8:
-		n = d2.day + 212;break;
-	case 9:
-		n = d2.day + 243;break;
-	case 10:
-		n = d2.day + 273;break;
-	case 11:
-		n = d2.day + 304;break;
-	case 12:
-		n = d2.day + 334;break;
+	case 1:n = y.tian; break;
+	case 2:n = y.tian + 31; break;
+	case 3:n = y.tian + 59; break;
+	case 4:n = y.tian + 90; break;
+	case 5:n = y.tian + 120; break;
+	case 6:n = y.tian + 151; break;
+	case 7:n = y.tian + 181; break;
+	case 8:n = y.tian + 212; break;
+	case 9:n = y.tian + 243; break;
+	case 10:n = y.tian + 273; break;
+	case 11:n = y.tian + 304; break;
+	case 12:n = y.tian + 334; break;
 	}
-	x = m - n;//¼ÆËãÈÕÆÚ²î
-	if (x >= 0)//·µ»Ø·Ç¸ºÖµ
-		return x;
-	else
-		return -x;
+	//æ±‚ç›¸å·®å¤©æ•°
+	t = n - m;
+	printf("ç›¸å·®çš„å¤©æ•°ï¼š%d\n", t);
 }

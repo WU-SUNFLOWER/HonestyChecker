@@ -19,71 +19,77 @@
     <Filter Include="头文件\languages">
       <UniqueIdentifier>{286c32a0-7075-452d-82e7-2c0d61784f7e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\interface">
+      <UniqueIdentifier>{bc888831-eb5a-4706-a981-246065744eda}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="src\interface\normal_interface.cpp">
+      <Filter>源文件\interface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tokenizer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Tokenizer.cpp">
+    <ClCompile Include="src\Token.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Token.cpp">
+    <ClCompile Include="src\ForwardRefMaker.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ForwardRefMaker.cpp">
+    <ClCompile Include="src\Text.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Text.cpp">
+    <ClCompile Include="src\Comparer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Comparer.cpp">
+    <ClCompile Include="src\HonestyChecker.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="HonestyChecker.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="languages\Lang.cpp">
+    <ClCompile Include="src\languages\Lang.cpp">
       <Filter>源文件\languages</Filter>
     </ClCompile>
-    <ClCompile Include="languages\LangCpp.cpp">
+    <ClCompile Include="src\languages\LangCpp.cpp">
       <Filter>源文件\languages</Filter>
     </ClCompile>
-    <ClCompile Include="languages\LangPython.cpp">
+    <ClCompile Include="src\languages\LangPython.cpp">
       <Filter>源文件\languages</Filter>
+    </ClCompile>
+    <ClCompile Include="src\interface\python_interface.cpp">
+      <Filter>源文件\interface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Tokenizer.h">
+    <ClInclude Include="include\Tokenizer.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Token.h">
+    <ClInclude Include="include\Token.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Idf.h">
+    <ClInclude Include="include\Idf.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="util.h">
+    <ClInclude Include="include\util.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="HonestyChecker.h">
+    <ClInclude Include="include\HonestyChecker.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="ForwardRefMaker.h">
+    <ClInclude Include="include\ForwardRefMaker.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Text.h">
+    <ClInclude Include="include\Text.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Comparer.h">
+    <ClInclude Include="include\Comparer.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="languages\Lang.h">
+    <ClInclude Include="include\languages\Lang.h">
       <Filter>头文件\languages</Filter>
     </ClInclude>
-    <ClInclude Include="languages\LangCpp.h">
+    <ClInclude Include="include\languages\LangCpp.h">
       <Filter>头文件\languages</Filter>
     </ClInclude>
-    <ClInclude Include="languages\LangPython.h">
+    <ClInclude Include="include\languages\LangPython.h">
       <Filter>头文件\languages</Filter>
     </ClInclude>
   </ItemGroup>

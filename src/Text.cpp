@@ -6,7 +6,7 @@ using namespace HonestyChecker;
 Text::Text(std::vector<Token>& boundVector, size_t begin, size_t end) 
 	: _bound_vector(boundVector), _begin(begin), _end(end)
 {
-	assert(begin >= 0 && end <= boundVector.size());
+	assert(end <= boundVector.size());
 }
 
 size_t Text::begin() const {

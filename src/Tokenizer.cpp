@@ -2,11 +2,12 @@
 #include "Lang.h"
 #include <cassert>
 #include <iostream>
+#include <cstring>
 
 using namespace HonestyChecker;
 
-Tokenizer::Tokenizer(const char* text, size_t text_length, std::vector<Token>& target, Lang* lang)
-    : _text(text), _target(target), _text_length(text_length), _is_at_begin_of_line(true), _lang(lang)
+Tokenizer::Tokenizer(std::vector<Token>& target, Lang* lang)
+    : _target(target), _lang(lang)
 {
 
     assert(lang != nullptr);
@@ -22,12 +23,20 @@ Tokenizer::Tokenizer(const char* text, size_t text_length, std::vector<Token>& t
     _keywords = lang->getKeywords();
     _preprocess_commands = lang->getPreprocessCommands();
 
+}
+
+void Tokenizer::initialize(const char* text) {
+    _text = text;
+    _text_length = strlen(text);
+
+    _is_at_begin_of_line = true;
+
     _matched_text_buffer_size = 32;
     _matched_text = new char[_matched_text_buffer_size]();
 
     setStartState(0);
 
-    _token_count = 0;
+    _token_count = 0;    
 }
 
 Tokenizer::~Tokenizer() {
@@ -36,7 +45,7 @@ Tokenizer::~Tokenizer() {
 
 void Tokenizer::setupMatchedText() {
 
-    int matchedRangeSize = _currentTextPos - _beginTextPos;
+    size_t matchedRangeSize = _currentTextPos - _beginTextPos;
     if (_matched_text_buffer_size <= matchedRangeSize) {
         while (_matched_text_buffer_size <= matchedRangeSize) {
             _matched_text_buffer_size <<= 1;
@@ -147,7 +156,7 @@ size_t Tokenizer::run() {
         _currentState = _startState;
         if (_is_at_begin_of_line) ++_currentState;
 
-Label_Match:
+//Label_Match:
         do {
             int offset = _matrix_ec[CharToSubscript(_text[_currentTextPos])];
             if (_matrix_accept[_currentState]) {
@@ -175,7 +184,7 @@ Label_Find_Action:
 
         setupMatchedText();
 
-Label_Do_Action:
+//Label_Do_Action:
         DispatchingActionResult result = _lang->dispatchActionForTokenizer(this, action);
         switch (result) {
             case DispatchingActionResult::Halt: {

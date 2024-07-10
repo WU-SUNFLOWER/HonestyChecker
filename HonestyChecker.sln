@@ -9,6 +9,8 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		PythonInterface|x64 = PythonInterface|x64
+		PythonInterface|x86 = PythonInterface|x86
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
@@ -17,6 +19,10 @@ Global
 		{158C3CA1-13BA-4334-A341-6314903C532E}.Debug|x64.Build.0 = Debug|x64
 		{158C3CA1-13BA-4334-A341-6314903C532E}.Debug|x86.ActiveCfg = Debug|Win32
 		{158C3CA1-13BA-4334-A341-6314903C532E}.Debug|x86.Build.0 = Debug|Win32
+		{158C3CA1-13BA-4334-A341-6314903C532E}.PythonInterface|x64.ActiveCfg = PythonInterface|x64
+		{158C3CA1-13BA-4334-A341-6314903C532E}.PythonInterface|x64.Build.0 = PythonInterface|x64
+		{158C3CA1-13BA-4334-A341-6314903C532E}.PythonInterface|x86.ActiveCfg = PythonInterface|Win32
+		{158C3CA1-13BA-4334-A341-6314903C532E}.PythonInterface|x86.Build.0 = PythonInterface|Win32
 		{158C3CA1-13BA-4334-A341-6314903C532E}.Release|x64.ActiveCfg = Release|x64
 		{158C3CA1-13BA-4334-A341-6314903C532E}.Release|x64.Build.0 = Release|x64
 		{158C3CA1-13BA-4334-A341-6314903C532E}.Release|x86.ActiveCfg = Release|Win32

@@ -10,38 +10,38 @@ namespace HonestyChecker {
 
 class Tokenizer {
 private:
-
-	Lang* _lang;
-
-	int _currentTextPos;
-	int _beginTextPos;
-	int _lastAcceptedState;
-	int _lastAcceptedCurrentPos;
+	size_t _currentTextPos = 0;
+	size_t _beginTextPos = 0;
+	size_t _lastAcceptedState = 0;
+	size_t _lastAcceptedCurrentPos = 0;
 
 	std::vector<Token>& _target;
 
-	const int* _matrix_accept;
-	const int* _matrix_ec;
-	const int* _matrix_meta;
-	const int* _matrix_base;
-	const int* _matrix_def;
-	const int* _matrix_nxt;
-	const int* _matrix_chk;
+	const uint32_t* _matrix_accept;
+	const uint32_t* _matrix_ec;
+	const uint32_t* _matrix_meta;
+	const uint32_t* _matrix_base;
+	const uint32_t* _matrix_def;
+	const uint32_t* _matrix_nxt;
+	const uint32_t* _matrix_chk;
 
 	const struct Idf* _preprocess_commands;
 	const struct Idf* _keywords;
 
-	int _startState;
-	int _currentState;
-	bool _is_at_begin_of_line;
+	size_t _startState = 0;
+	size_t _currentState = 0;
+	bool _is_at_begin_of_line = true;
 
-	const char* _text;
-	size_t _text_length;
+	const char* _text = nullptr;
+	size_t _text_length = 0;
 	char* _matched_text = nullptr;
-	size_t _matched_text_length;
-	size_t _matched_text_buffer_size;
+	size_t _matched_text_length = 0;
+	size_t _matched_text_buffer_size = 0;
 
-	int _token_count;
+	int _token_count = 0;
+
+	Lang* _lang = nullptr;
+
 
 public:
 
@@ -51,9 +51,9 @@ public:
 	//enum StartState { Initial = 0, Comment = 1 };
 	enum DispatchingActionResult { Default = 0, Halt = 1, FindActionAgain = 2};
 
-	Tokenizer(const char* text, size_t text_length, std::vector<Token>& target, Lang* lang);
+	Tokenizer(std::vector<Token>& target, Lang* lang);
 	~Tokenizer();
-
+	void initialize(const char*);
 	size_t run();
 	
 	void setupMatchedText();
@@ -69,6 +69,10 @@ public:
 	void backToPreviousState();
 
 	void printVector(size_t begin, size_t end, FILE* file = stdout) const;
+
+	std::vector<Token>& vector() const {
+		return _target;
+	};
 
 	static Token getTokenFromIdfList(const char* idf, const struct Idf idf_list[], size_t, Token);
 

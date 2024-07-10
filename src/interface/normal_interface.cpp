@@ -6,10 +6,13 @@
 #include "Tokenizer.h"
 #include "Text.h"
 #include "Comparer.h"
+#include <cstring>
 
 using namespace HonestyChecker;
 
-void readText(std::string filename, std::vector<Token>& vec, std::vector<Text>& texts, Lang* lang) {
+void readText(
+    std::string filename, Tokenizer& tokenizer, std::vector<Text>& texts
+) {
     std::stringstream stream;
     std::ifstream file(filename);
 
@@ -23,14 +26,12 @@ void readText(std::string filename, std::vector<Token>& vec, std::vector<Text>& 
     std::string str = stream.str();
     const char* code = str.c_str();
 
-    Tokenizer tokenizer(code, strlen(code), vec, lang);
-    size_t begin = vec.size();
-    size_t length = tokenizer.run();
-    tokenizer.printVector(begin, begin+length);
+    tokenizer.initialize(code);
 
-    Text text(vec, begin, begin + length);
-
-    texts.push_back(text);
+    size_t begin = tokenizer.vector().size();
+    size_t end = begin + tokenizer.run();
+    
+    texts.push_back({tokenizer.vector(), begin, end});
 
 }
 
@@ -40,24 +41,24 @@ int main() {
     std::vector<Token> vec = {Token::None};
     std::vector<Text> texts;
 
-    Lang* lang1 = nullptr;
+    Lang* lang = nullptr;
 
     if (strcmp(langname, "C++") == 0) {
-        lang1 = LangCpp::getInstance();
+        lang = LangCpp::getInstance();
     }
     else if (strcmp(langname, "Python3") == 0) {
-        lang1 = LangPython::getInstance();
+        lang = LangPython::getInstance();
     }
     else {
         printf("Unknown language '%s'.", langname);
         exit(-1);
     }
 
-    readText("../test_case/2_a.txt", vec, texts, lang1);
-    readText("../test_case/2_b.txt", vec, texts, lang1);
-    //readText("../test_case/2_c.txt", vec, texts, lang1);
+    Tokenizer tokenizer(vec, lang);
+    readText("test_case/2_a.txt", tokenizer, texts);
+    readText("test_case/2_b.txt", tokenizer, texts);
 
-    Comparer comparer(vec, texts, lang1);
+    Comparer comparer(vec, texts, lang);
     printf("%lf", comparer.run());
 
 }

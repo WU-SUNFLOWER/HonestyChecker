@@ -2,10 +2,13 @@
 
 using namespace HonestyChecker;
 
-const int LangBase<LangPython>::Magic_Number_1 = 80;
-const int LangBase<LangPython>::Magic_Number_2 = 245;
+template<>
+const uint32_t LangBase<LangPython>::Magic_Number_1 = 80;
+template<>
+const uint32_t LangBase<LangPython>::Magic_Number_2 = 245;
 
-const int LangBase<LangPython>::Matrix_Accept[] = 
+template<>
+const uint32_t LangBase<LangPython>::Matrix_Accept[] =
 { 0,
     0,    0,    0,    0,    0,    0,   18,   16,   14,   13,
    14,   15,   15,   15,   15,   11,   11,   12,   10,   10,
@@ -17,7 +20,8 @@ const int LangBase<LangPython>::Matrix_Accept[] =
     0,    9,    9,    0,    9,    9,    9,    9,    0
 };
 
-const int LangBase<LangPython>::Matrix_Ec[] =
+template<>
+const uint32_t LangBase<LangPython>::Matrix_Ec[] =
 { 0,
     1,    1,    1,    1,    1,    1,    1,    1,    2,    3,
     1,    2,    2,    1,    1,    1,    1,    1,    1,    1,
@@ -49,14 +53,16 @@ const int LangBase<LangPython>::Matrix_Ec[] =
     1,    1,    1,    1,    1
 };
 
-const int LangBase<LangPython>::Matrix_Meta[] =
+template<>
+const uint32_t LangBase<LangPython>::Matrix_Meta[] =
 { 0,
     1,    2,    3,    2,    1,    1,    1,    1,    4,    5,
     6,    6,    1,    7,    8,    1,    7,    7,    8,    8,
     8,    8,    8,    8,    8,    7
 };
 
-const int LangBase<LangPython>::Matrix_Base[] =
+template<>
+const uint32_t LangBase<LangPython>::Matrix_Base[] =
 { 0,
     0,    0,  109,  108,  105,  104,  110,  245,  245,  245,
   245,  245,   21,  103,   20,   12,   79,  245,   28,    0,
@@ -71,7 +77,8 @@ const int LangBase<LangPython>::Matrix_Base[] =
 
 };
 
-const int LangBase<LangPython>::Matrix_Def[] =
+template<>
+const uint32_t LangBase<LangPython>::Matrix_Def[] =
 { 0,
    79,    1,   80,   80,   80,   80,   79,   79,   79,   79,
    79,   79,   81,   82,   83,   84,   84,   79,   85,   85,
@@ -86,7 +93,8 @@ const int LangBase<LangPython>::Matrix_Def[] =
 
 };
 
-const int LangBase<LangPython>::Matrix_Nxt[] =
+template<>
+const uint32_t LangBase<LangPython>::Matrix_Nxt[] =
 { 0,
     8,    9,   10,   11,   12,   13,   14,   15,   12,   12,
    16,   17,   18,   19,   20,   12,   21,   22,   23,   20,
@@ -120,7 +128,8 @@ const int LangBase<LangPython>::Matrix_Nxt[] =
    79
 };
 
-const int LangBase<LangPython>::Matrix_Chk[] =
+template<>
+const uint32_t LangBase<LangPython>::Matrix_Chk[] =
 { 0,
     1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
     1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -154,10 +163,12 @@ const int LangBase<LangPython>::Matrix_Chk[] =
    79
 };
 
+template<>
 const struct HonestyChecker::Idf LangBase<LangPython>::Idf_PreprocessCommands[] = {
     {"define",		META('d')},
 };
 
+template<>
 const struct HonestyChecker::Idf LangBase<LangPython>::Idf_Keywords[] = {
     {"and",          NORM('a')},
     {"as",           NORM('A')},
@@ -196,6 +207,7 @@ const struct HonestyChecker::Idf LangBase<LangPython>::Idf_Keywords[] = {
     {"yield",        NORM('y')},
 };
 
+template<>
 const std::set<Token> LangBase<LangPython>::Non_Initials = {
     NORM(')'),
     NORM(']'),
@@ -205,6 +217,7 @@ const std::set<Token> LangBase<LangPython>::Non_Initials = {
     NORM(';'),
 };
 
+template<>
 const std::set<Token> LangBase<LangPython>::Non_Finals = {
     NORM('('),
     NORM('['),
@@ -246,12 +259,14 @@ const std::set<Token> LangBase<LangPython>::Non_Finals = {
     NORM('y'),            /* yield */
 };
 
+template<>
 const std::set<Token> LangBase<LangPython>::Openers = {
     NORM('('),
     NORM('['),
     NORM('{'),
 };
 
+template<>
 const std::set<Token> LangBase<LangPython>::Closers = {
     NORM(')'),
     NORM(']'),
@@ -268,6 +283,7 @@ size_t LangPython::getLengthOfKeywordsList() {
     return sizeof(LangPython::Idf_Keywords) / sizeof(HonestyChecker::Idf);
 }
 
+template<>
 Tokenizer::DispatchingActionResult LangBase<LangPython>::dispatchActionForTokenizer(
     Tokenizer* tokenizer, int action
 ) {

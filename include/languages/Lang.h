@@ -15,16 +15,16 @@ protected:
 public:
 	virtual ~Lang() = default;
 
-	virtual int getMagicNumber1() = 0;
-	virtual int getMagicNumber2() = 0;
+	virtual uint32_t getMagicNumber1() = 0;
+	virtual uint32_t getMagicNumber2() = 0;
 
-	virtual const int* getAcceptMatrix() = 0;
-	virtual const int* getEquivalenceClassMatrix() = 0;
-	virtual const int* getMetaMatrix() = 0;
-	virtual const int* getBaseMatrix() = 0;
-	virtual const int* getDefaultMatrix() = 0;
-	virtual const int* getNextMatrix() = 0;
-	virtual const int* getCheckMatrix() = 0;
+	virtual const uint32_t* getAcceptMatrix() = 0;
+	virtual const uint32_t* getEquivalenceClassMatrix() = 0;
+	virtual const uint32_t* getMetaMatrix() = 0;
+	virtual const uint32_t* getBaseMatrix() = 0;
+	virtual const uint32_t* getDefaultMatrix() = 0;
+	virtual const uint32_t* getNextMatrix() = 0;
+	virtual const uint32_t* getCheckMatrix() = 0;
 	virtual const struct HonestyChecker::Idf* getPreprocessCommands() = 0;
 	virtual const struct HonestyChecker::Idf* getKeywords() = 0;
 	virtual size_t getLengthOfPreprocessCommandsList() = 0;
@@ -43,16 +43,16 @@ template<typename T>
 class LangBase : public Lang {
 protected:
 
-	static const int Magic_Number_1;
-	static const int Magic_Number_2;
+	static const uint32_t Magic_Number_1;
+	static const uint32_t Magic_Number_2;
 
-	static const int Matrix_Accept[];
-	static const int Matrix_Ec[];
-	static const int Matrix_Meta[];
-	static const int Matrix_Base[];
-	static const int Matrix_Def[];
-	static const int Matrix_Nxt[];
-	static const int Matrix_Chk[];
+	static const uint32_t Matrix_Accept[];
+	static const uint32_t Matrix_Ec[];
+	static const uint32_t Matrix_Meta[];
+	static const uint32_t Matrix_Base[];
+	static const uint32_t Matrix_Def[];
+	static const uint32_t Matrix_Nxt[];
+	static const uint32_t Matrix_Chk[];
 
 	static const struct HonestyChecker::Idf Idf_PreprocessCommands[];
 	static const struct HonestyChecker::Idf Idf_Keywords[];
@@ -63,31 +63,31 @@ protected:
 	static const std::set<Token> Closers;
 
 public:
-	virtual int getMagicNumber1() override {
+	virtual uint32_t getMagicNumber1() override {
 		return T::Magic_Number_1;
 	};
-	virtual int getMagicNumber2() override {
+	virtual uint32_t getMagicNumber2() override {
 		return T::Magic_Number_2;
 	};
-	virtual const int* getAcceptMatrix() override {
+	virtual const uint32_t* getAcceptMatrix() override {
 		return T::Matrix_Accept;
 	};
-	virtual const int* getEquivalenceClassMatrix() override {
+	virtual const uint32_t* getEquivalenceClassMatrix() override {
 		return T::Matrix_Ec;
 	};
-	virtual const int* getMetaMatrix() override {
+	virtual const uint32_t* getMetaMatrix() override {
 		return T::Matrix_Meta;
 	};
-	virtual const int* getBaseMatrix() override {
+	virtual const uint32_t* getBaseMatrix() override {
 		return T::Matrix_Base;
 	};
-	virtual const int* getDefaultMatrix() override {
+	virtual const uint32_t* getDefaultMatrix() override {
 		return T::Matrix_Def;
 	};
-	virtual const int* getNextMatrix() override {
+	virtual const uint32_t* getNextMatrix() override {
 		return T::Matrix_Nxt;
 	};
-	virtual const int* getCheckMatrix() override {
+	virtual const uint32_t* getCheckMatrix() override {
 		return T::Matrix_Chk;
 	};
 	virtual const struct HonestyChecker::Idf* getPreprocessCommands() override {

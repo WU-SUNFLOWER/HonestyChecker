@@ -5,6 +5,14 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="PythonInterface|Win32">
+      <Configuration>PythonInterface</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="PythonInterface|x64">
+      <Configuration>PythonInterface</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
@@ -32,6 +40,12 @@
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PythonInterface|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
@@ -41,6 +55,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PythonInterface|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -60,17 +80,45 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='PythonInterface|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='PythonInterface|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)C:\Users\Administrator\AppData\Local\Programs\Python\Python38\libs</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PythonInterface|x64'">
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)C:\Users\Administrator\AppData\Local\Programs\Python\Python38\libs</LibraryPath>
+    <TargetExt>.pyd</TargetExt>
+    <OutDir>$(SolutionDir)\dist\</OutDir>
+    <IntDir>obj\</IntDir>
+    <TargetName>libHonestyChecker</TargetName>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='PythonInterface|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
@@ -102,14 +150,32 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>languages;.</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;include\languages;C:\Users\Administrator\AppData\Local\Programs\Python\Python38\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Users\Administrator\AppData\Local\Programs\Python\Python38\libs;C:\Users\Administrator\AppData\Local\Programs\Python\Python38\include</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='PythonInterface|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>include;include\languages;C:\Users\Administrator\AppData\Local\Programs\Python\Python38\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Users\Administrator\AppData\Local\Programs\Python\Python38\libs;C:\Users\Administrator\AppData\Local\Programs\Python\Python38\include</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -129,29 +195,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Comparer.cpp" />
-    <ClCompile Include="languages\LangCpp.cpp" />
-    <ClCompile Include="ForwardRefMaker.cpp" />
-    <ClCompile Include="HonestyChecker.cpp" />
-    <ClCompile Include="languages\Lang.cpp" />
-    <ClCompile Include="languages\LangPython.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Text.cpp" />
-    <ClCompile Include="Token.cpp" />
-    <ClCompile Include="Tokenizer.cpp" />
+    <ClCompile Include="src\Comparer.cpp" />
+    <ClCompile Include="src\languages\LangCpp.cpp" />
+    <ClCompile Include="src\ForwardRefMaker.cpp" />
+    <ClCompile Include="src\HonestyChecker.cpp" />
+    <ClCompile Include="src\languages\Lang.cpp" />
+    <ClCompile Include="src\languages\LangPython.cpp" />
+    <ClCompile Include="src\Text.cpp" />
+    <ClCompile Include="src\Token.cpp" />
+    <ClCompile Include="src\Tokenizer.cpp" />
+    <ClCompile Include="src\interface\normal_interface.cpp" />
+    <ClCompile Include="src\interface\python_interface.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Comparer.h" />
-    <ClInclude Include="languages\LangCpp.h" />
-    <ClInclude Include="ForwardRefMaker.h" />
-    <ClInclude Include="HonestyChecker.h" />
-    <ClInclude Include="Idf.h" />
-    <ClInclude Include="languages\Lang.h" />
-    <ClInclude Include="languages\LangPython.h" />
-    <ClInclude Include="Text.h" />
-    <ClInclude Include="Token.h" />
-    <ClInclude Include="Tokenizer.h" />
-    <ClInclude Include="util.h" />
+    <ClInclude Include="include\Comparer.h" />
+    <ClInclude Include="include\languages\LangCpp.h" />
+    <ClInclude Include="include\ForwardRefMaker.h" />
+    <ClInclude Include="include\HonestyChecker.h" />
+    <ClInclude Include="include\Idf.h" />
+    <ClInclude Include="include\languages\Lang.h" />
+    <ClInclude Include="include\languages\LangPython.h" />
+    <ClInclude Include="include\Text.h" />
+    <ClInclude Include="include\Token.h" />
+    <ClInclude Include="include\Tokenizer.h" />
+    <ClInclude Include="include\util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

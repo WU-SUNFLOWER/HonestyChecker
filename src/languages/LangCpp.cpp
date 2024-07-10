@@ -2,10 +2,13 @@
 
 using namespace HonestyChecker;
 
-const int LangBase<LangCpp>::Magic_Number_1 = 94;
-const int LangBase<LangCpp>::Magic_Number_2 = 363;
+template<>
+const uint32_t LangBase<LangCpp>::Magic_Number_1 = 94;
+template<>
+const uint32_t LangBase<LangCpp>::Magic_Number_2 = 363;
 
-const int LangBase<LangCpp>::Matrix_Accept[] = {
+template<>
+const uint32_t LangBase<LangCpp>::Matrix_Accept[] = {
     0,
     0,    0,    0,    0,   20,   18,   16,   15,   16,   17,
     17,   17,   17,   11,   11,   14,   11,   13,   17,    2,
@@ -19,7 +22,8 @@ const int LangBase<LangCpp>::Matrix_Accept[] = {
     2,    2,    0
 };
 
-const int LangBase<LangCpp>::Matrix_Ec[] = {
+template<>
+const uint32_t LangBase<LangCpp>::Matrix_Ec[] = {
     0,
         1,    1,    1,    1,    1,    1,    1,    1,    2,    3,
         1,    2,    2,    1,    1,    1,    1,    1,    1,    1,
@@ -51,14 +55,16 @@ const int LangBase<LangCpp>::Matrix_Ec[] = {
         1,    1,    1,    1,    1
 };
 
-const int LangBase<LangCpp>::Matrix_Meta[] = {
+template<>
+const uint32_t LangBase<LangCpp>::Matrix_Meta[] = {
         0,
         1,    2,    3,    2,    1,    1,    1,    4,    5,    6,
         1,    7,    7,    1,    8,    9,    8,    1,    8,    8,
         8,    9,    8,    9,    9,    8
 };
 
-const int LangBase<LangCpp>::Matrix_Base[] = {
+template<>
+const uint32_t LangBase<LangCpp>::Matrix_Base[] = {
        0,
         0,  310,   26,  301,  302,  363,  363,  363,  363,  363,
        47,  281,   44,   40,   41,  363,   59,  285,   84,    0,
@@ -74,7 +80,8 @@ const int LangBase<LangCpp>::Matrix_Base[] = {
       314,  323,  326,  335,  344,  353
 };
 
-const int LangBase<LangCpp>::Matrix_Def[] = {
+template<>
+const uint32_t LangBase<LangCpp>::Matrix_Def[] = {
        0,
        93,    1,   93,    3,   93,   93,   93,   93,   93,   93,
        94,   95,   93,   96,   96,   93,   93,   97,   98,   99,
@@ -90,7 +97,8 @@ const int LangBase<LangCpp>::Matrix_Def[] = {
        93,   93,   93,   93,   93,   93
 };
 
-const int LangBase<LangCpp>::Matrix_Nxt[] = {
+template<>
+const uint32_t LangBase<LangCpp>::Matrix_Nxt[] = {
        0,
         6,    7,    8,    9,   10,   11,   10,   12,   10,   10,
        13,   14,   15,   16,   17,   18,   18,   10,   17,   17,
@@ -136,7 +144,8 @@ const int LangBase<LangCpp>::Matrix_Nxt[] = {
        93,   93,   93,   93,   93,   93,   93,   93,   93
 };
 
-const int LangBase<LangCpp>::Matrix_Chk[] = {
+template<>
+const uint32_t LangBase<LangCpp>::Matrix_Chk[] = {
        0,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -182,6 +191,7 @@ const int LangBase<LangCpp>::Matrix_Chk[] = {
        93,   93,   93,   93,   93,   93,   93,   93,   93
 };
 
+template<>
 const struct HonestyChecker::Idf LangBase<LangCpp>::Idf_PreprocessCommands[] = {
     {"define",		META('d')},
     {"elif",		META('e')},
@@ -197,6 +207,7 @@ const struct HonestyChecker::Idf LangBase<LangCpp>::Idf_PreprocessCommands[] = {
     {"undef",		META('u')}
 };
 
+template<>
 const struct HonestyChecker::Idf LangBase<LangCpp>::Idf_Keywords[] = {
     {"and",			NORM('a')},
     {"and_eq",		NORM('A')},
@@ -269,12 +280,14 @@ const struct HonestyChecker::Idf LangBase<LangCpp>::Idf_Keywords[] = {
     {"xor_eq",		NORM('X')}
 };
 
+template<>
 const std::set<Token> LangBase<LangCpp>::Non_Initials = {
     NORM(')'),
     NORM('}'),
     NORM(';'),
 };
 
+template<>
 const std::set<Token> LangBase<LangCpp>::Non_Finals = {
     Token::IDF,			/* identifier */
     NORM('{'),
@@ -347,12 +360,14 @@ const std::set<Token> LangBase<LangCpp>::Non_Finals = {
     NORM('X'),		/* xor_eq */
 };
 
+template<>
 const std::set<Token> LangBase<LangCpp>::Openers = {
     NORM('{'),
     NORM('('),
     NORM('['),
 };
 
+template<>
 const std::set<Token> LangBase<LangCpp>::Closers = {
     NORM('}'),
     NORM(')'),
@@ -368,6 +383,7 @@ size_t LangCpp::getLengthOfKeywordsList() {
     return sizeof(LangCpp::Idf_Keywords) / sizeof(HonestyChecker::Idf);
 }
 
+template<>
 Tokenizer::DispatchingActionResult LangBase<LangCpp>::dispatchActionForTokenizer(
     Tokenizer* tokenizer, int action
 ) {
