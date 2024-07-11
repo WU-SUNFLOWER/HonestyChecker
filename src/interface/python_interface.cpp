@@ -69,7 +69,7 @@ static PyObject* compare(PyObject* self, PyObject* args) {
     else if (strcmp(lang_type_string, "C++") == 0) {
         language = HonestyChecker::LangCpp::getInstance();
     }
-    else if (strcmp(lang_type_string, "Python") == 0) {
+    else if (strcmp(lang_type_string, "Python3") == 0) {
         language = HonestyChecker::LangPython::getInstance();
     }
     else {
