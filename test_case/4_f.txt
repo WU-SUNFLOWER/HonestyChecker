@@ -1,0 +1,67 @@
+// 点的覆盖圆的程序设计
+// 求覆盖n个点的最小圆
+#include <math.h>
+#include <stdio.h>
+
+int main(void)
+{
+    int i, n, a = 0, b = 0, c = 0;
+    int a0 = 0, b0 = 0, c0 = 0, am, bm, cm, t, w;
+    double L, L1, L2, L3, r, s, max = 0;
+    double x[50], y[50];
+
+    scanf("%d", &n);
+    for (i = 1; i <= n; i++) {
+        scanf("%lf,%lf", &x[i], &y[i]);
+    }
+
+    // a, b, c三重循环穷举所有三点组合
+    for (a = 1; a <= n - 2; a++) {
+        for (b = a + 1; b <= n - 1; b++)
+            for (c = b + 1; c <= n; c++) {
+                L1 = sqrt((x[b] - x[c]) * (x[b] - x[c]) + (y[b] - y[c]) * (y[b] - y[c]));
+                L2 = sqrt((x[a] - x[c]) * (x[a] - x[c]) + (y[a] - y[c]) * (y[a] - y[c]));
+                L3 = sqrt((x[b] - x[a]) * (x[b] - x[a]) + (y[b] - y[a]) * (y[b] - y[a]));
+                L = (L1 + L2 + L3) / 2;
+                s = sqrt(L * (L - L1) * (L - L2) * (L - L3));        // 三角形面积
+
+                // 直角钝角或共线时，r为最长边的一半
+                if (L2 * L2 + L3 * L3 <= L1 * L1) {
+                    r = L1 / 2;
+                    b0 = b;
+                    c0 = c;
+                    t = 1;
+                }
+                else if (L3 * L3 + L1 * L1 <= L2 * L2) {
+                    r = L2 / 2;
+                    a0 = a;
+                    c0 = c;
+                    t = 2;
+                }
+                else if (L1 * L1 + L2 * L2 <= L3 * L3) {
+                    r = L3 / 2;
+                    a0 = a;
+                    b0 = b;
+                    t = 3;
+                }
+                else {
+                    r = L1 * L2 * L3 / (4 * s);        // 求外接圆半径r
+                    a0 = a;
+                    b0 = b;
+                    c0 = c;
+                    t = 0;
+                }
+                if (r > max) {
+                    max = r;
+                    w = t;
+                    am = a0;
+                    bm = b0;
+                    cm = c0;
+                }
+            }
+    }
+
+    printf("以上%d个点覆盖圆的最小半径为：%.4f\n", n, max);
+
+    return 0;
+}

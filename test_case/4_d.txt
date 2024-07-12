@@ -1,0 +1,76 @@
+#include <stdio.h>
+#include <math.h>
+#include <stdbool.h>
+
+typedef struct {
+    double x;
+    double y;
+} Point;
+
+typedef struct {
+    double dx;
+    double dy;
+    double magnitude;
+} Vector;
+
+Vector createVector(Point a, Point b) {
+    Vector v = {b.x - a.x, b.y - a.y};
+    v.magnitude = sqrt(v.dx * v.dx + v.dy * v.dy);
+    return v;
+}
+
+// 判定向量是否共线并计算余弦值
+double processVectors(Vector v1, Vector v2, Vector v3) {
+    if ((v1.dx == 0 && v2.dx == 0) || (v1.dy == 0 && v2.dy == 0)) {
+        return 0;
+    }
+    if ((v1.dx / v2.dx) == (v1.dy / v2.dy)) {
+        return 0;
+    }
+    double a = v1.magnitude;
+    double b = v2.magnitude;
+    double c = v3.magnitude;
+    return (a * a + b * b - c * c) / (2 * a * b);
+}
+
+// 获取三个数中的最大值
+double getMax(double a, double b, double c) {
+    return fmax(fmax(a, b), c);
+}
+
+double computeRadius(Point p1, Point p2, Point p3) {
+    Vector v1 = createVector(p1, p2);
+    Vector v2 = createVector(p1, p3);
+    Vector v3 = createVector(p2, p3);
+    if (processVectors(v1, v2, v3) <= 0 || processVectors(v1, v3, v2) <= 0 || processVectors(v2, v3, v1) <= 0) {
+        return getMax(v1.magnitude, v2.magnitude, v3.magnitude) / 2;
+    }
+    double a = v1.magnitude;
+    double b = v2.magnitude;
+    double c = v3.magnitude;
+    double s = (a + b + c) / 2;
+    double area = sqrt(s * (s - a) * (s - b) * (s - c));
+    return a * b * c / (4 * area);
+}
+
+int main() {
+    int total;
+    Point points[100];
+    scanf("%d", &total);
+    for (int i = 0; i < total; i++) {
+        scanf("%lf,%lf", &points[i].x, &points[i].y);
+    }
+    double result = 0;
+    for (int i = 0; i < total; i++) {
+        for (int j = i + 1; j < total; j++) {
+            for (int k = j + 1; k < total; k++) {
+                Point p1 = points[i];
+                Point p2 = points[j];
+                Point p3 = points[k];
+                double radius = computeRadius(p1, p2, p3);
+                result = fmax(result, radius);
+            }
+        }
+    }
+    printf("以上%d个点的覆盖圆的最小半径为%.4lf\n", total, ans);
+}

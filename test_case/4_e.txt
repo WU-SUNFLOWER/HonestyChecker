@@ -1,0 +1,222 @@
+#include <stdio.h>
+#include <math.h>
+#include <stdbool.h>
+
+// Function to swap two elements
+void swap(int *a, int *b) {
+  int temp = *a;
+  *a = *b;
+  *b = temp;
+}
+
+// Partition function to place pivot element at its correct position
+// This function takes the last element as the pivot
+int partition(int arr[], int low, int high) {
+  int pivot = arr[high];
+  int i = (low - 1); // index of smaller element
+
+  for (int j = low; j <= high - 1; j++) {
+    // Check if current element is smaller than the pivot
+    if (arr[j] < pivot) {
+      i++; // increment index of smaller element
+      swap(&arr[i], &arr[j]);
+    }
+  }
+  swap(&arr[i + 1], &arr[high]);
+  return (i + 1);
+}
+
+/* The main function that implements QuickSort
+ arr[] -> array to be sorted
+  low  -> starting index of the subarray
+  high -> ending index of the subarray */
+void quickSort(int arr[], int low, int high) {
+  if (low < high) {
+    // pi is partitioning index, arr[p] is now at right place
+    int pi = partition(arr, low, high);
+
+    // Recursively sort elements before and after partition
+    quickSort(arr, low, pi - 1);
+    quickSort(arr, pi + 1, high);
+  }
+}
+
+// Function to print an array
+void printArray(int arr[], int n) {
+  for (int i = 0; i < n; ++i) {
+    printf("%d ", arr[i]);
+  }
+  printf("\n");
+}
+
+void insertionSort(int arr[], int n) {
+  int i, key, j;
+
+  // Start from the second element (we consider the first element as already sorted)
+  for (i = 1; i < n; i++) {
+    key = arr[i]; // Key represents the element to be inserted
+
+    // Move elements of arr[0..i-1], that are greater than key, to one position ahead
+    // of their current position
+    j = i - 1;
+    while (j >= 0 && arr[j] > key) {
+      arr[j + 1] = arr[j];
+      j = j - 1;
+    }
+    arr[j + 1] = key; // Insert the key at its correct position
+  }
+}
+
+// Function to merge two sorted sub-arrays into one
+void merge(int arr[], int low, int mid, int high) {
+  int n1 = mid - low + 1;
+  int n2 = high - mid;
+
+  // Create temporary arrays
+  int left[n1], right[n2];
+
+  // Copy data to temporary arrays left[] and right[]
+  for (int i = 0; i < n1; i++) {
+    left[i] = arr[low + i];
+  }
+  for (int j = 0; j < n2; j++) {
+    right[j] = arr[mid + 1 + j];
+  }
+
+  /* Merge the temporary arrays back into arr[low..high] */
+  int i = 0, j = 0, k = low;
+  while (i < n1 && j < n2) {
+    if (left[i] <= right[j]) {
+      arr[k] = left[i];
+      i++;
+    } else {
+      arr[k] = right[j];
+      j++;
+    }
+    k++;
+  }
+
+  // Copy the remaining elements of left[], if there are any
+  while (i < n1) {
+    arr[k] = left[i];
+    i++;
+    k++;
+  }
+
+  // Copy the remaining elements of right[], if there are any
+  while (j < n2) {
+    arr[k] = right[j];
+    j++;
+    k++;
+  }
+}
+
+/* Function to implement Merge Sort */
+void mergeSort(int arr[], int low, int high) {
+  if (low < high) {
+    // Find the middle point
+    int mid = low + (high - low) / 2;
+
+    // Sort first and second halves
+    mergeSort(arr, low, mid);
+    mergeSort(arr, mid + 1, high);
+
+    // Merge the sorted halves
+    merge(arr, low, mid, high);
+  }
+}
+
+void selectionSort(int arr[], int n) {
+  int i, j, min_idx;
+
+  // One by one move boundary of unsorted subarray
+  for (i = 0; i < n - 1; i++) {
+    // Find the minimum element in unsorted array
+    min_idx = i;
+    for (j = i + 1; j < n; j++) {
+      if (arr[j] < arr[min_idx]) {
+        min_idx = j;
+      }
+    }
+
+    // Swap the found minimum element with the first element
+    if (min_idx != i) {
+      int temp = arr[min_idx];
+      arr[min_idx] = arr[i];
+      arr[i] = temp;
+    }
+  }
+}
+
+typedef struct {
+    double x;
+    double y;
+} Point;
+
+typedef struct {
+    double dx;
+    double dy;
+    double magnitude;
+} Vector;
+
+Vector createVector(Point a, Point b) {
+    Vector v = {b.x - a.x, b.y - a.y};
+    v.magnitude = sqrt(v.dx * v.dx + v.dy * v.dy);
+    return v;
+}
+
+// 判定向量是否共线并计算余弦值
+double processVectors(Vector v1, Vector v2, Vector v3) {
+    if ((v1.dx == 0 && v2.dx == 0) || (v1.dy == 0 && v2.dy == 0)) {
+        return 0;
+    }
+    if ((v1.dx / v2.dx) == (v1.dy / v2.dy)) {
+        return 0;
+    }
+    double a = v1.magnitude;
+    double b = v2.magnitude;
+    double c = v3.magnitude;
+    return (a * a + b * b - c * c) / (2 * a * b);
+}
+
+// 获取三个数中的最大值
+double getMax(double a, double b, double c) {
+    return fmax(fmax(a, b), c);
+}
+
+double computeRadius(Point p1, Point p2, Point p3) {
+    Vector v1 = createVector(p1, p2);
+    Vector v2 = createVector(p1, p3);
+    Vector v3 = createVector(p2, p3);
+    if (processVectors(v1, v2, v3) <= 0 || processVectors(v1, v3, v2) <= 0 || processVectors(v2, v3, v1) <= 0) {
+        return getMax(v1.magnitude, v2.magnitude, v3.magnitude) / 2;
+    }
+    double a = v1.magnitude;
+    double b = v2.magnitude;
+    double c = v3.magnitude;
+    double s = (a + b + c) / 2;
+    double area = sqrt(s * (s - a) * (s - b) * (s - c));
+    return a * b * c / (4 * area);
+}
+
+int main() {
+    int total;
+    Point points[100];
+    scanf("%d", &total);
+    for (int i = 0; i < total; i++) {
+        scanf("%lf,%lf", &points[i].x, &points[i].y);
+    }
+    double result = 0;
+    for (int i = 0; i < total; i++) {
+        for (int j = i + 1; j < total; j++) {
+            for (int k = j + 1; k < total; k++) {
+                Point p1 = points[i];
+                Point p2 = points[j];
+                Point p3 = points[k];
+                double radius = computeRadius(p1, p2, p3);
+                result = fmax(result, radius);
+            }
+        }
+    }
+    printf("以上%d个点的覆盖圆的最小半径为%.4lf\n", total, result);
+}

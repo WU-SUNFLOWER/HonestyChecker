@@ -1,0 +1,91 @@
+#include <stdio.h>
+#include <math.h>
+#include <stdbool.h>
+
+typedef struct {
+    double x_coord;
+    double y_coord;
+} Coordinate;
+
+typedef struct {
+    double x_comp;
+    double y_comp;
+    double magnitude;
+} Vector;
+
+Vector generateVector(Coordinate start, Coordinate end) {
+    Vector vec = {end.x_coord - start.x_coord, end.y_coord - start.y_coord};
+    vec.magnitude = sqrt(vec.x_comp * vec.x_comp + vec.y_comp * vec.y_comp);
+    return vec;
+}
+
+// 余弦定理，求v1和v2对应线段围成夹角的余弦值
+double calculateCosine(Vector vec1, Vector vec2, Vector vec3) {
+    double side1 = vec1.magnitude;
+    double side2 = vec2.magnitude;
+    double side3 = vec3.magnitude;
+    return (side1 * side1 + side2 * side2 - side3 * side3) / (2 * side1 * side2);
+}
+
+// 判定两向量是否共线
+bool areVectorsParallel(Vector vec1, Vector vec2) {
+    if (vec1.x_comp == 0 || vec2.x_comp == 0) {
+        return !vec1.x_comp && !vec2.x_comp;
+    } else if (vec1.y_comp == 0 || vec2.y_comp == 0) {
+        return !vec1.y_comp && !vec2.y_comp;
+    } else {
+        return vec1.x_comp / vec2.x_comp == vec1.y_comp / vec2.y_comp;
+    }
+}
+
+// 求三项中的最大值
+double findMax(double val1, double val2, double val3) {
+    if (val1 > val2) val2 = val1;
+    return val2 > val3 ? val2 : val3;
+}
+
+double findMinCircleRadius(Coordinate point1, Coordinate point2, Coordinate point3) {
+    Vector vec1 = generateVector(point1, point2);
+    Vector vec2 = generateVector(point1, point3);
+    Vector vec3 = generateVector(point2, point3);
+    //若3点组成直角或钝角三角形，或3点共线，此时，最小圆的半径为三边中最长边的一半
+    if (areVectorsParallel(vec1, vec2)
+        || calculateCosine(vec1, vec2, vec3) <= 0
+        || calculateCosine(vec1, vec3, vec2) <= 0
+        || calculateCosine(vec2, vec3, vec1) <= 0) {
+        return findMax(vec1.magnitude, vec2.magnitude, vec3.magnitude) / 2;
+    }
+    // 否则，3点组成锐角三角形，最小圆为3点的外接圆
+    double side1 = vec1.magnitude;
+    double side2 = vec2.magnitude;
+    double side3 = vec3.magnitude;
+    // 海伦定理解出三角形面积
+    double semiPerimeter = (side1 + side2 + side3) / 2;
+    double area = sqrt(semiPerimeter * (semiPerimeter - side1) * (semiPerimeter - side2) * (semiPerimeter - side3));
+    // 套公式解出外接圆半径
+    return side1 * side2 * side3 / (4 * area);
+}
+
+int main() {
+    int numPoints;
+    Coordinate coords[100];
+    scanf("%d", &numPoints);
+    for (int i = 0; i < numPoints; i++) {
+        scanf("%lf,%lf", &coords[i].x_coord, &coords[i].y_coord);
+    }
+    // 任取三点，枚举所有情况
+    double result = 0;
+    for (int i = 0; i < numPoints; i++) {
+        for (int j = i + 1; j < numPoints; j++) {
+            for (int k = j + 1; k < numPoints; k++) {
+                Coordinate point1 = coords[i];
+                Coordinate point2 = coords[j];
+                Coordinate point3 = coords[k];
+                double tempResult = findMinCircleRadius(point1, point2, point3);
+                //printf("[%lf,%lf], [%lf,%lf], [%lf,%lf] => %lf\n", point1.x_coord, point1.y_coord, point2.x_coord, point2.y_coord, point3.x_coord, point3.y_coord, tempResult);
+                result = findMax(result, tempResult, 0);
+            }
+        }
+    }
+    printf("以上%d个点的覆盖圆的最小半径为%.4lf\n", numPoints, result);
+}
