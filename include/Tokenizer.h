@@ -2,7 +2,7 @@
 #define Head_Tokenizer
 
 #include "HonestyChecker.h"
-#include "token.h"
+#include "Token.h"
 #include "Idf.h"
 #include <vector>
 

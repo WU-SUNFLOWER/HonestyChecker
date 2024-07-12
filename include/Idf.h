@@ -1,7 +1,7 @@
 #ifndef Head_Idf
 #define Head_Idf
 
-#include "token.h"
+#include "Token.h"
 
 namespace HonestyChecker {
 
