@@ -1,4 +1,4 @@
-// 点的覆盖圆的程序设计
+﻿// 点的覆盖圆的程序设计
 // 求覆盖n个点的最小圆
 #include <math.h>
 #include <stdio.h>
@@ -61,7 +61,7 @@ int main(void)
             }
     }
 
-    printf("以上%d个点覆盖圆的最小半径为：%.4f\n", n, max);
+    printf("以上%d个点的覆盖圆的最小半径为%.4f\n", n, max);
 
     return 0;
 }

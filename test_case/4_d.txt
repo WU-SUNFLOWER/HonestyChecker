@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <math.h>
 #include <stdbool.h>
 
@@ -72,5 +72,5 @@ int main() {
             }
         }
     }
-    printf("以上%d个点的覆盖圆的最小半径为%.4lf\n", total, ans);
+    printf("以上%d个点的覆盖圆的最小半径为%.4lf\n", total, result);
 }
